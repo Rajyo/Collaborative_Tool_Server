@@ -3,13 +3,15 @@ const app = express();
 const http = require('http').Server(app);
 const cors = require('cors');
 const Socket = require('socket.io');
+const dotenv = require('dotenv')
+dotenv.config()
 
 app.use(cors());
-const PORT = 4000;
+const PORT = process.env.PORT || 4000
 
 const socketIO = require('socket.io')(http, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:5173"]
+    origin: process.env.CLIENT_URL
   }
 });
 
