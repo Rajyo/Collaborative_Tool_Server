@@ -7,13 +7,12 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 app.use(cors({
-  origin: '*'
+  origin: process.env.CLIENT_URL
 }));
-const PORT = process.env.PORT || 4000
 
 const socketIO = require('socket.io')(http, {
   cors: {
-    origin: '*'
+    origins: process.env.CLIENT_URL
   }
 });
 
@@ -88,6 +87,9 @@ socketIO.on('connection', (socket: typeof Socket) => {
   });
 
 });
+
+
+const PORT = process.env.PORT || 4000
 
 http.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
