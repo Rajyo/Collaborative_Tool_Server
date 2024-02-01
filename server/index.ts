@@ -6,12 +6,14 @@ const Socket = require('socket.io');
 const dotenv = require('dotenv')
 dotenv.config()
 
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 const PORT = process.env.PORT || 4000
 
 const socketIO = require('socket.io')(http, {
   cors: {
-    origin: process.env.CLIENT_URL
+    origin: '*'
   }
 });
 
