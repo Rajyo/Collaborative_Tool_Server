@@ -94,8 +94,8 @@ socketIO.on('connection', (socket: typeof Socket) => {
 
 const PORT = process.env.PORT || 4000
 
-app.get("/", (req: Request, res: Response) => {
-  console.log("Server ready for connections")
+app.get("/welcome", (req: Request, res: Response) => {
+  console.log("Welcome, Server ready for connections")
 })
 
 http.listen(PORT, () => {
