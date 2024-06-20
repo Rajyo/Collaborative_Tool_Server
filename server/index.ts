@@ -1,3 +1,5 @@
+import { Request, Response } from "express";
+
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
@@ -5,6 +7,7 @@ const cors = require('cors');
 const Socket = require('socket.io');
 const dotenv = require('dotenv')
 dotenv.config()
+
 
 app.use(cors({
   origin: process.env.CLIENT_URL
@@ -17,32 +20,32 @@ const socketIO = require('socket.io')(http, {
 });
 
 type UserData = {
-  roomName : string
-  userName : string
-  socketID : string
+  roomName: string
+  userName: string
+  socketID: string
 }
 
 type MessageData = {
-text: string
-name: string
-room: string
-id: string
-socketID: string
+  text: string
+  name: string
+  room: string
+  id: string
+  socketID: string
 }
 
 type UserTyping = {
-userTyping: string
-room: string
+  userTyping: string
+  room: string
 }
 
 
 type ChangeConfig = {
-  color: string 
+  color: string
   size: number
 }
 
 type BeginDraw = {
-  x:  number
+  x: number
   y: number
 }
 
@@ -52,7 +55,7 @@ let users: UserData[] = [];
 socketIO.on('connection', (socket: typeof Socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
-  
+
   socket.on('beginPath', (arg: BeginDraw) => {
     socket.broadcast.emit('beginPath', arg)
   })
@@ -76,7 +79,7 @@ socketIO.on('connection', (socket: typeof Socket) => {
     socketIO.to(data.room).emit('messageResponse', data);
   });
 
-  socket.on('typing', (data: UserTyping) => socket.broadcast.emit('typingResponse', data) );
+  socket.on('typing', (data: UserTyping) => socket.broadcast.emit('typingResponse', data));
 
 
   socket.on('disconnect', () => {
@@ -91,6 +94,10 @@ socketIO.on('connection', (socket: typeof Socket) => {
 
 const PORT = process.env.PORT || 4000
 
+app.get("/", (req: Request, res: Response) => {
+  console.log("Server ready for connections")
+})
+
 http.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
+  console.log(`Server listening on http://localhost:${PORT}`);
 });
