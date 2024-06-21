@@ -51,6 +51,7 @@ type BeginDraw = {
 
 
 let users: UserData[] = [];
+let roomName: string;
 
 socketIO.on('connection', (socket: typeof Socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
@@ -72,6 +73,7 @@ socketIO.on('connection', (socket: typeof Socket) => {
   socket.on('newUser', (data: UserData) => {
     socket.join(data.roomName);
     users.push(data);
+    roomName = data.roomName
     socketIO.to(data.roomName).emit('newUserResponse', users);
   });
 
@@ -80,12 +82,13 @@ socketIO.on('connection', (socket: typeof Socket) => {
   });
 
   socket.on('typing', (data: UserTyping) => socket.broadcast.emit('typingResponse', data));
+  socket.on('endTyping', (data: UserTyping) => socket.broadcast.emit('typingResponse', data));
 
 
   socket.on('disconnect', () => {
     console.log('🔥: A user disconnected');
     users = users.filter((user) => user.socketID !== socket.id);
-    socketIO.emit('newUserResponse', users);
+    socketIO.to(roomName).emit('newUserResponse', users);
     socket.disconnect();
   });
 
